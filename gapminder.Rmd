@@ -9,10 +9,12 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Load packages
 ```{r}
 library(tidyverse)
 ```
 
+## Gapminder data set
 ```{r}
 gapminder <- read_csv("https://raw.githubusercontent.com/jules32/2017-11-30-MBARI/gh-pages/data/gapminder.csv")
 ```
@@ -42,6 +44,8 @@ summary(gapminder)
 library(skimr)
 skim(gapminder)
 ```
+## Dplyr
+
 ```{r}
 dplyr::filter(gapminder, country == "Switzerland")
 ```
@@ -67,5 +71,62 @@ select(gapminder, -continent) %>%
 gapminder %>%
   mutate(gdp = gdpPercap * pop) %>%
   arrange(desc(gdp))
+```
+```{r}
+gapminder %>%
+  group_by(country) %>%
+  mutate(gdp = gdpPercap * pop, max_gdp = max(gdp)) %>%
+  ungroup()
+```
+```{r}
+gapminder %>%
+  group_by(country) %>%
+  mutate(gdp = pop * gdpPercap) %>%
+  summarise(max_gdp = max(gdp))
+  
+```
+### Join
+
+```{r}
+co2 <- readr::read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/co2.csv")
+```
+
+```{r}
+head(co2)
+summary(co2)
+```
+
+```{r}
+gap_2007 <- gapminder %>%
+  filter(year == 2007)
+```
+
+```{r}
+right_join(gap_2007, co2, by = "country")
+```
+
+## Tidyr
+
+```{r}
+AirPassengers
+```
+```{r}
+tidyr::gather(as.data.frame(AirPassengers), month, passenger)
+```
+```{r}
+gap_wide <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder_wide.csv")
+
+```
+```{r}
+gap_better <- gap_wide %>%
+  gather(observation, observ_value, -continent, -country) %>%
+  separate(observation, into = c("obs_type", "year"), sep = "_", convert = TRUE)
+```
+```{r}
+unique(gap_better$obs_type)
+```
+```{r}
+gap_better %>%
+  spread(obs_type, observ_value)
 ```
 
