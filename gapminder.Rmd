@@ -33,4 +33,39 @@ nrow(gapminder)
 unique(gapminder[,"continent"])
 unique(gapminder$continent)
 ```
+```{r}
+summary(gapminder)
+```
+
+```{r}
+# install.packages("skimr")
+library(skimr)
+skim(gapminder)
+```
+```{r}
+dplyr::filter(gapminder, country == "Switzerland")
+```
+```{r}
+filter(gapminder, country == "Afghanistan", year == max(year))
+```
+
+```{r}
+
+```
+
+```{r}
+gapminder_no_cont <- dplyr::select(gapminder, -continent)
+dplyr::filter(gapminder_no_cont, year == 2007)
+```
+```{r}
+
+select(gapminder, -continent) %>% 
+  filter(year == 2007)
+
+```
+```{r}
+gapminder %>%
+  mutate(gdp = gdpPercap * pop) %>%
+  arrange(desc(gdp))
+```
 
